@@ -1,10 +1,36 @@
 'use client'
 import React,{useState} from 'react'
 import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Input, Button} from "@nextui-org/react";
+import axios from 'axios';
+
 
 export default function Signin() {
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
+    const url = "http://localhost:3000/login";
+    const apicall = async() =>{
+           try {
+                const data = {
+                    username:username,
+                    password:password
+                }
+                axios.post(url,data).then((res)=>{  
+                    if(res.data.status === 200){
+                        console.log(res.data);
+                        localStorage.setItem("token",res.data.token);
+                        localStorage.setItem("userID",res.data.userID);
+                        
+                    }
+
+                }).catch((err)=>{
+                    console.log(err);
+                }
+                )
+             } catch (error) {
+               
+           }
+    }
+
     return(
         <section className="flex flex-col items-center justify-center gap-4 py-8">
             <Card

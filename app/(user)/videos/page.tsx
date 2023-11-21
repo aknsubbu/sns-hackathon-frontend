@@ -9,6 +9,7 @@ import { title, subtitle } from "@/components/primitives";
 import { GithubIcon,SearchIcon } from "@/components/icons";
 import { Input,Kbd,Textarea,Button,Skeleton,Card} from "@nextui-org/react";
 import {  Autocomplete,  AutocompleteSection,  AutocompleteItem} from "@nextui-org/autocomplete";
+import axios from 'axios';
 
 import {languages} from "@/components/languages"
 
@@ -18,6 +19,36 @@ export default function Videos({ params }: { params: { symbol: string } }) {
   const toggleLoad = () => {
     setIsLoaded(!isLoaded);
   };
+
+  const url="http://localhost:3000/api/getvideos";
+
+  const [videos,setVideos]=useState([]);
+
+  const apicall = async()=>{
+    try{
+       const userid= localStorage.getItem("userid");
+       const data={
+         userid:userid
+       }
+       axios.post(url,data,{
+         headers:{
+            "Content-Type":"application/json",
+            "authentication_type":"User",
+            "authentication_credinals":localStorage.getItem("token")
+         }
+       }).then((res)=>{
+          if(res.data.status === 200){
+            setVideos(res.data.videos);
+          }
+        }).catch((err)=>{
+          console.log(err);
+        }
+        )
+        
+    }catch(error){
+       console.log(error)
+    }
+  }
   
     const skeleton=(
     
