@@ -8,6 +8,9 @@ import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon,SearchIcon } from "@/components/icons";
 import { Input,Kbd,Textarea,Button } from "@nextui-org/react";
+import {  Autocomplete,  AutocompleteSection,  AutocompleteItem} from "@nextui-org/autocomplete";
+
+import {languages} from "@/components/languages"
 
 export default function Home() {
  const [News_title,setNews_Title]=useState("")
@@ -28,7 +31,7 @@ export default function Home() {
         <div className="flex flex-col gap-3 items-center">
 		<Input
 		     variant="bordered"	
-			size="md"
+			size="lg"
 			aria-label="Search"
 			classNames={{
 				inputWrapper: "bg-default-100",
@@ -43,7 +46,19 @@ export default function Home() {
 			type="search"
 			value={News_title}
 			onChange={(e) => setNews_Title(e.target.value)}
-			
+			endContent={
+				<Autocomplete
+				isRequired
+				variant='underlined'
+				size='sm'
+				defaultItems={languages}
+				placeholder="Select a language"
+				defaultSelectedKey="cat"
+				className="max-w-[180px]"
+				>
+				{(item) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+				</Autocomplete>
+			}
 			
 		/>
 
@@ -57,6 +72,8 @@ export default function Home() {
         onValueChange={setDesc}
 		/>
         
+		
+
 		<Button className="bg-gradient-to-b from-red-900 via-orange-400 to-amber-700  mt-5">Generate Video</Button>
 		</div>
       </div>
