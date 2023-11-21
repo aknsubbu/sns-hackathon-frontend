@@ -9,12 +9,61 @@ import { title, subtitle } from "@/components/primitives";
 import { GithubIcon,SearchIcon } from "@/components/icons";
 import { Input,Kbd,Textarea,Button } from "@nextui-org/react";
 import {  Autocomplete,  AutocompleteSection,  AutocompleteItem} from "@nextui-org/autocomplete";
+import axios from 'axios'
 
 import {languages} from "@/components/languages"
 
 export default function Home() {
  const [News_title,setNews_Title]=useState("")
  const [desc,setDesc]=useState("")
+const [files, setFiles] = useState<File[]>([]);
+ const [uploaded,setUploaded]=useState([])
+ const [formData, setFormData] = useState({
+    title: '',
+    article: '',
+    user_id: 'test',
+    media_list: [],
+  });
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const { name, value } = e.target;
+	setFormData((prevData) => ({ ...prevData, [name]: value }));
+};
+
+function handleMultipleChange(event: React.ChangeEvent<HTMLInputElement>) {
+	if(event.target.files) {
+		setFiles(Array.from(event.target.files));
+	}
+}
+  function handleMultipleSubmit(event:any) {
+	console.log(files)
+  }
+
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+	event.preventDefault();
+	try {
+		const response = await fetch('http://localhost:5000/process_data', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(formData),
+		});
+
+		if (response.ok) {
+			const result = await response.json();
+			console.log(result);
+		} else {
+			console.error('Error:', response.statusText);
+		}
+	} catch (err) {
+		if (err instanceof Error) {
+			console.error('Error:', err.message);
+		} else {
+			console.error('Error:', err);
+		}
+	}
+}
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block w-full text-center justify-center">
@@ -44,8 +93,8 @@ export default function Home() {
 				<SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
 			}
 			type="search"
-			value={News_title}
-			onChange={(e) => setNews_Title(e.target.value)}
+			value={formData.title}
+			onChange={(e) => handleChange(e)}
 			endContent={
 				<Autocomplete
 				isRequired
@@ -67,14 +116,20 @@ export default function Home() {
         label="Description"
         labelPlacement="outside"
         placeholder="Enter your description"
-        value={desc}
+        value={formData.article}
 		description="Enter a concise description of your article."
-        onValueChange={setDesc}
+        onValueChange={(value) => setFormData({ ...formData, article: value })}
 		/>
+		<form onSubmit={handleSubmit}>
+        
+        <input type="file" multiple onChange={handleChange} value={formData.media_list}/>
+  
+		<Button className="bg-gradient-to-b from-red-900 via-orange-400 to-amber-700  mt-5" >Generate Video</Button>
+      </form>
         
 		
 
-		<Button className="bg-gradient-to-b from-red-900 via-orange-400 to-amber-700  mt-5">Generate Video</Button>
+		
 		</div>
       </div>
     </section>

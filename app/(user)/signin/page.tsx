@@ -35,7 +35,7 @@ export default function Signin() {
                 </CardBody>
                 <Divider/>
                 <CardFooter className='inline-block w-full text-center justify-center'>
-                    <p>Don't have an account? </p>
+                    <p>Don&apos;t have an account? </p>
                     <Link 
                         href='/signup'
                         showAnchorIcon

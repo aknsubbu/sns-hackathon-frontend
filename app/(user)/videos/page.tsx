@@ -12,7 +12,7 @@ import {  Autocomplete,  AutocompleteSection,  AutocompleteItem} from "@nextui-o
 
 import {languages} from "@/components/languages"
 
-export default function Videos() {
+export default function Videos({ params }: { params: { symbol: string } }) {
     const [isLoaded, setIsLoaded] = useState(false);
 
   const toggleLoad = () => {
@@ -20,6 +20,7 @@ export default function Videos() {
   };
   
     const skeleton=(
+    
         <div className="flex flex-col gap-3">
         <Card className="w-[200px] space-y-5 p-4" radius="lg">
           <Skeleton isLoaded={isLoaded} className="rounded-lg">
